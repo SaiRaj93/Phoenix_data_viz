@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+h1{
+  font-weight: 600;
+  font-family:  sans-serif;
+  position: relative;  
+  font-size: 30px;
+  padding: 10px 10px 10px 2%;
+  color: black;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+}
+h2{
+  font-weight: 600;
+  font-family:  sans-serif;
+  position: relative;  
+  font-size: 12px;
+  padding: 10px 10px 10px 10px;
+  color: black;
+  
+}
+
+footer{
+  font-family:  sans-serif;
+  position: relative; 
+  text-align: center;
+}
+body{
+  background-color: #ffffff;
+}
+.viz{
+
+
+        
+          padding: 20px;
+          height:600;
+          width:1050;
+          display: block;
+          word-wrap:break-word;
+
+
+}
+
+.node {
+  stroke-width: 1.2px;
+}
+
+.legend{
+  position: relative; 
+  padding: 40px 10px 10px 2%;
+  font-family:  sans-serif;
+  stroke-width:1.2px;
+}
+
+ .text{
+
+        
+         
+          padding: 20px;
+          height:600;
+          width:300;
+          display: block;
+          word-wrap:break-word;
+
+      }
+
+.arrange-horizontally {
+    display: inline-block;
+    
+ 
+}
+.arrange-vertically {
+    display: block;
+ 
+}
+
+
+</style>
+
+<script>
+var param1var = getQueryVariable("bus_id");
+
+function getQueryVariable(variable) {
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+    if (pair[0] == variable) {
+      return pair[1];
+    }
+  } 
+  alert('Query Variable ' + variable + ' not found');
+}
+</script>
+
+<body>
+
+  <div class="row">
+    <div class="col-md-10"> <div class="viz"></div> </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10"> <div class="text"></div> </div>
+    </div>
+  
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+<script>
+var svg2=null;
+
+
+d3.json("tipProcUser.json",function(json_data)
+  {
+      json_data=json_data.filter(function(d){
+      //var business_id = d["business_id"];
+
+      //console.log(json_data.business_id);
+
+      if(d["business_id"]=== ""+param1var+"")
+      {
+
+  console.log("enter");
+        return true;
+      
+      } 
+}) 
+
+
+generateviz(json_data);
+});
+
+
+function generateviz(data){
+  datasets=data;
+  //console.log(datasets);
+  d3.select("body")
+  .append("text")
+var width = 1000,
+    height = 600;
+
+var fill = d3.scale.category10();
+
+var nodes = d3.range(datasets.length).map(function(i) {
+  return {index: i};
+});
+
+
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .size([width, height])
+    .charge(-80)
+    .gravity(0.2)
+    .on("tick", tick)
+    .start();
+
+var svg = d3.select(".viz").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var tooltip = d3.select("div")
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .style("color", "black")
+    .style("padding", "8px")
+    .style("background-color", "#ffffff")
+    .style("border-radius", "8px")
+    .style("box-shadow"," 4px 4px 10px rgba(0, 0, 0, 0.4)")
+    .style("font", "12px sans-serif")
+    .html("text");
+
+var node = svg.selectAll(".node")
+    .data(nodes)
+  .enter().append("circle")
+    .attr("class", "node")
+    .attr("cx", function(d) { return d.x; })
+    .attr("cy", function(d) { return d.y; })
+    .attr("r",function(d,i){
+
+        if (((datasets[i].User_votes.funny)+(datasets[i].User_votes.useful)+(datasets[i].User_votes.cool)) <= 30)
+        {
+            return 15;
+        }
+        else if (((datasets[i].User_votes.funny)+(datasets[i].User_votes.useful)+(datasets[i].User_votes.cool)) > 30  && ((datasets[i].User_votes.funny)+(datasets[i].User_votes.useful)+(datasets[i].User_votes.cool)) <=100)
+        {
+            return 20;
+        }
+        else if (((datasets[i].User_votes.funny)+(datasets[i].User_votes.useful)+(datasets[i].User_votes.cool)) >250   && ((datasets[i].User_votes.funny)+(datasets[i].User_votes.useful)+(datasets[i].User_votes.cool)) <=5000)
+        {
+            return 30;
+        } 
+        else
+          return 40;
+
+
+
+
+//#FF7D6F,#4FB3BA,#868B72
+
+
+
+      } )
+    .style("fill", function(d, i) { //needs to be changed??
+
+      if (((datasets[i].User_votes.funny)+(datasets[i].User_votes.useful)+(datasets[i].User_votes.cool)) <= 30)
+        {
+          
+          return "#ba741f";  
+        }
+        else if (((datasets[i].User_votes.funny)+(datasets[i].User_votes.useful)+(datasets[i].User_votes.cool)) > 30  && ((datasets[i].User_votes.funny)+(datasets[i].User_votes.useful)+(datasets[i].User_votes.cool)) <=100)
+        {
+          return "#238637";  
+        }
+        else if (((datasets[i].User_votes.funny)+(datasets[i].User_votes.useful)+(datasets[i].User_votes.cool)) >250   && ((datasets[i].User_votes.funny)+(datasets[i].User_votes.useful)+(datasets[i].User_votes.cool)) <=5000)
+        {
+            
+            return "#a1241e";
+        } 
+        else
+
+          return "#3327b8";
+          
+
+
+
+
+      
+     })
+    .style("stroke", function(d, i) { 
+      return d3.rgb(0,0,0).darker(2);       
+    })
+    .call(force.drag)
+    .on("mouseover", function(d,i) {
+              tooltip.html("<p align=center><b> FUNNY:</b>"+datasets[i].User_votes.funny+"<br>"+"<b> USEFUL:</b>"+datasets[i].User_votes.useful+"<br>"+"<b> COOL:</b>"+datasets[i].User_votes.cool);
+              tooltip.style("visibility", "visible");
+      })
+      .on("click",function(d,i){ text_function(datasets[i].text);})
+      .on("mousemove", function() {
+          return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
+      })
+      .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
+    .on("mousedown", function() { d3.event.stopPropagation(); });
+
+svg.style("opacity", 1e-6)
+  .transition()
+    .duration(500)
+    .style("opacity", 1);
+
+d3.select("body")
+    .on("mousedown", mousedown);
+
+function tick(e) {
+
+  // Push different nodes in different directions for clustering.
+  var k = e.alpha;
+  nodes.forEach(function(o, i) {
+    o.y += k;
+    o.x += k;
+  });
+
+  node.attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; });
+}
+
+
+
+function mousedown() {
+  nodes.forEach(function(o, i) {
+    o.x += (Math.random() - .5) * 40;
+    o.y += (Math.random() - .5) * 40;
+  });
+  force.resume();
+}
+
+var k = d3.range(4).map(function(i) {
+  return {index: i};
+});
+var legend = svg.selectAll(".legend")
+      .data(k)
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; })
+      ;
+
+  // draw legend colored rectangles
+  legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill",function(d, i) { 
+      if(i==1){return "#ba741f";}
+      else if (i==2) { return "#23a637";}
+      else if (i==3) {return "#a1241e";}
+        else return "#3327b8"; })
+
+  // draw legend text
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".30em")
+      .style("text-anchor", "end")
+      .text(function(d, i) { 
+      if(i==1){return "0 < USER-VOTES < 30";}
+      else if (i==2) { return "31 < USER-VOTES < 100";}
+      else if (i==3) {return "101 < USER-VOTES < 5000";} 
+      else return " 5001 < USER-VOTES"});
+
+}
+
+function text_function(text){
+
+
+if(svg2!=null)
+{
+  svg2.remove();
+  //svg2=null;
+}
+var w=1000
+var h=100
+
+
+ 
+
+svg2 = d3.select(".text")
+      .append("g")
+      .attr("width", w)
+      .attr("height", h);
+
+svg2.selectAll("g")
+ .data(text)
+ .enter()
+ .append("text")
+ .text(function (d,i) {
+ return d;
+   })
+ .style("font-size","25px")
+ .attr("text-anchor", "middle");
+
+}
+
+
+</script>
+
+
+</body>

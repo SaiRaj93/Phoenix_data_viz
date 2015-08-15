@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.8/mapbox.js'></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src='business_json_new.js'></script>
+<script src='state.js'></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.8/mapbox.css' rel='stylesheet' />
+<style>
+html, body,table{
+  width: 100%;
+  height: 100%;
+}
+ #map {
+  width: 100%;
+  height: 100%;
+}
+
+
+.info {
+			padding: 6px 8px;
+			font: 14px/16px Arial, Helvetica, sans-serif;
+			background: white;
+			background: rgba(255,255,255,0.8);
+			box-shadow: 0 0 15px rgba(0,0,0,0.2);
+			border-radius: 5px;
+		}
+
+		.legend {
+			text-align: left;
+			line-height: 18px;
+			color: #555;
+		}
+		
+		.legend i {
+			width: 18px;
+			height: 18px;
+			float: left;
+			margin-right: 8px;
+			opacity: 0.7;
+		}
+
+
+
+</style>
+
+<html>
+<head>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<meta charset=utf-8 />
+</head>
+
+<script>
+	var global_bus_id="";
+	var r_name="";
+	var r_add="";
+	function checkinClick()
+	{
+		document.getElementById('iframe').src = "checkin.html?bus_id="+global_bus_id+"";
+	}
+	
+	function ratingClick()
+	{
+		document.getElementById('iframe').src = "ratings.html?bus_id="+global_bus_id+"";
+	}
+	
+	function tipClick()
+	{
+		document.getElementById('iframe').src = "tip.html?bus_id="+global_bus_id+"";
+	}
+	
+	function reviewClick()
+	{
+		document.getElementById('iframe').src = "reviews.html?bus_id="+global_bus_id+"";
+	}
+</script>
+
+<body>
+
+
+<div class="row" >
+    <div class="col-md-12 " id="home"><h2>Yelp Restaurant Analytics-Phoneix</h2></div>
+</div> 
+  
+  <div id="map" ></div>
+ 
+
+<div class= "group" id="otherpanel" style="display:none">
+  <div class="row">
+    <div class="col-md-12"><h3><div id="r_name1"></div></h3></div>
+  </div>
+  <div class="row">
+    <div class="col-md-8"><h4><div id="r_add1"></div></h4></div>
+    <div class="col-md-4" id ="stardiv"></div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-2">
+        <div>
+              <div></br></div>
+              <div></br></div>
+              <div></br></div>
+              <div></br></div>
+              <div><button type="button" id="Ratings" class="btn btn-default btn-lg btn-block" onclick="ratingClick()">Ratings</button></div>
+              <div></br></div>
+              <div></br></div>
+              <div></br></div>
+              <div><button type="button" id="Checkin" class="btn btn-default btn-lg btn-block" onclick="checkinClick()">Check in</button></div>
+              <div></br></div>
+              <div></br></div>
+              <div></br></div>
+              <div><button type="button" id="Reviews" class="btn btn-default btn-lg btn-block" onclick="reviewClick()">Reviews</button></div>
+              <div></br></div>
+              <div></br></div>
+              <div></br></div>
+              <div><button type="button" id="Tips" class="btn btn-default btn-lg btn-block" onclick="tipClick()">Tips</button></div>
+              <div></br></div>
+          </div>
+    </div>
+    <div class="col-md-10" id="viz">
+	<div><iframe id="iframe" frameborder="0" height="500" width="100%"></iframe></div>
+  </div>
+</div>
+</div>
+</body>
+
+<script>
+var prev;
+var map = L.map('map').setView([33.5900, -112.0667 ], 13);
+$('#home').click(function(e){
+$('#iframe').attr('src',null);
+$("#map").show();
+	$("#otherpanel").css("display", 'none');
+
+});
+/*
+L.tileLayer('http://{s}.tiles.mapbox.com/v3/MapID/{z}/{x}/{y}.png', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    maxZoom: 18
+}).addTo(map);
+*/
+L.mapbox.accessToken = 'pk.eyJ1Ijoicm9oYW5qYXdhbGkiLCJhIjoiT0tJWjZVMCJ9.5d8J5A3AacDgZ4Cwmbcdyw';
+
+map.scrollWheelZoom.disable();
+map.touchZoom.disable();
+map.doubleClickZoom.disable();
+map.dragging.disable();
+//map.clickZoom.disable();
+// Replace 'examples.map-i87786ca' with your map id.
+var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v4/examples.map-i87786ca/{z}/{x}/{y}.png?access_token=' + L.mapbox.accessToken, {
+    attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
+});
+
+mapboxTiles.addTo(map);
+
+function highlightFeature(e) {
+	var layer = e.target;
+	prev= layer;
+	//console.log(layer);
+    /*layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
+*/
+	layer.bindPopup("Name : " + layer.feature.properties.name+"<br/> Address: "+layer.feature.properties.address+"<br/> Stars: "+layer.feature.properties.stars,{offset:new L.Point(0,0)}).openPopup();
+	
+    if (!L.Browser.ie && !L.Browser.opera) {
+        layer.bringToFront();
+    }
+}
+
+function star(st)
+{
+	
+	console.log(st);
+	if (st == 0.5)
+	document.getElementById("stardiv").innerHTML = " <H4>Ratings : <img src='half.jpg' height='20' width='20' /></H4>";
+	if (st == 1 || st == 1.0)
+	document.getElementById("stardiv").innerHTML = " <H4>Ratings : <img src='star.jpeg' height='20' width='20' /></H4>";
+	if (st == 1.5)
+	document.getElementById("stardiv").innerHTML = " <H4>Ratings : <img src='star.jpeg' height='20' width='20' /> <img src='half.jpg' height='20' width='20' /></H4>";
+	if (st == 2 || st == 2.0)
+	document.getElementById("stardiv").innerHTML = " <H4>Ratings : <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /></H4>";
+	if (st == 2.5)
+	document.getElementById("stardiv").innerHTML = " <H4>Ratings : <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /> <img src='half.jpg' height='20' width='20' /></H4>";
+	if (st == 3 || st == 3.0)
+	document.getElementById("stardiv").innerHTML = " <H4>Ratings : <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /></H4>";
+	if (st == 3.5)
+	document.getElementById("stardiv").innerHTML = " <H4>Ratings : <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /> <img src='half.jpg' height='20' width='20' /></H4>";
+	if (st == 4 || st == 4.0)
+	document.getElementById("stardiv").innerHTML = " <H4>Ratings : <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /></H4>";
+	if (st == 4.5)
+	document.getElementById("stardiv").innerHTML = " <H4>Ratings : <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /> <img src='half.jpg' height='20' width='20' /></H4>";
+	if (st == 5 || st == 5.0)
+	document.getElementById("stardiv").innerHTML = " <H4>Ratings : <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /> <img src='star.jpeg' height='20' width='20' /></H4>";
+ }
+
+
+
+function update_data(){
+document.getElementById("r_name1").innerHTML=r_name;
+document.getElementById("r_add1").innerHTML=r_add;
+}
+
+
+function resetHighlight(e) {
+    //prev.resetStyle(e.target);
+	prev.closePopup();
+}
+
+function onClick(e) {
+    $("#map").css("display", 'none');
+	$("#otherpanel").show();
+	console.log(e.target.feature.properties.busid);
+	global_bus_id = e.target.feature.properties.busid;
+	r_name=e.target.feature.properties.name;
+	r_add = e.target.feature.properties.address;
+	update_data();
+	star(e.target.feature.properties.stars+"");
+}
+
+function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: onClick
+    });
+	/*if (feature.properties && feature.properties.name) {
+        layer.bindPopup(feature.properties.name);
+    }*/
+}
+
+
+function getColor(d) {
+    return d < 2 ? '#C6DBEF' :
+           d < 4 && d>=2 ? '#6BAED6' :
+                      '#08519C';
+}
+
+
+function getRadius(d) {
+    return d < 2 ? 4 :
+           d < 4  ? 6 :
+                     8;
+}
+
+
+function style(feature) 
+{
+    return {
+        fillColor: getColor(feature.properties.stars),
+        radius : 8,//getRadius(feature.properties.stars), 
+		color: "#000",
+		weight: 1,
+		opacity: 0.5,
+		fillOpacity: 1,
+		size: 'absolute'
+    };
+}
+
+
+var colorLayer_dessert =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.dessert;
+		}
+});
+
+var colorLayer_breakfast =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.breakfast;
+		}
+});
+
+/*var colorLayer_other =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		} 
+		filter: function(feature, layer) {
+			return feature.properties.dessert;
+		}
+});
+*/
+
+var colorLayer_latenight =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.latenight;
+		}
+});
+
+var colorLayer_dinner =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.dinner;
+		}
+});
+
+var colorLayer_brunch =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.brunch;
+		}
+});
+
+/*
+var colorLayer_other =L.geoJson(pointData_other, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		} 
+});
+*/
+
+var colorLayer_lunch =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.lunch;
+		}
+});
+
+
+var colorLayer_thai =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.Thai;
+		}
+});
+
+var colorLayer_american =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.American;
+		}
+});
+
+var colorLayer_mexican =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.Mexican;
+		}
+});
+
+var colorLayer_japanese =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.Japanese;
+		}
+});
+
+var colorLayer_chinese =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.Chinese;
+		}
+});
+
+var colorLayer_greek =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.Greek;
+		}
+});
+
+var colorLayer_italian =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.Italian;
+		}
+});
+
+var colorLayer_Indian =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.Indian;
+		}
+});
+
+var colorLayer_french =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}, 
+		filter: function(feature, layer) {
+			return feature.properties.French;
+		}
+});
+
+
+var colorLayer =L.geoJson(pointData, {
+		style: style,
+		onEachFeature: onEachFeature,
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng);
+		}
+});
+
+
+
+colorLayer.addTo(map);
+colorLayer_dessert.addTo(map);
+colorLayer_breakfast.addTo(map);
+//colorLayer_other.addTo(map);
+colorLayer_lunch.addTo(map);
+colorLayer_brunch.addTo(map);
+colorLayer_dinner.addTo(map);
+colorLayer_latenight.addTo(map);
+
+colorLayer_thai.addTo(map);
+colorLayer_american.addTo(map);
+colorLayer_mexican.addTo(map);
+colorLayer_japanese.addTo(map);
+colorLayer_chinese.addTo(map);
+colorLayer_greek.addTo(map);
+colorLayer_italian.addTo(map);
+colorLayer_Indian.addTo(map);
+colorLayer_french.addTo(map);
+
+var baseMaps = {
+    "Dessert": colorLayer_dessert,
+	"Breakfast" : colorLayer_breakfast,
+	"Lunch" : colorLayer_lunch,
+	"Brunch" : colorLayer_brunch,
+	"Dinner" : colorLayer_dinner,
+	"Latenight" : colorLayer_latenight,
+	"Thai": colorLayer_thai,
+	"American" : colorLayer_american,
+	"Mexican" : colorLayer_mexican,
+	"Japanese" : colorLayer_japanese,
+	"Chinese" : colorLayer_chinese,
+	"Greek" : colorLayer_greek,
+	"Italian" : colorLayer_italian,
+	"Indian" : colorLayer_Indian,
+	"French" : colorLayer_french,
+	"All" : colorLayer //+colorLayer_breakfast+ colorLayer_lunch+ colorLayer_brunch+ colorLayer_dinner+ colorLayer_latenight+ colorLayer_other
+};
+
+
+var legend = L.control({position: 'bottomright'});
+
+		legend.onAdd = function (map) {
+
+			var div = L.DomUtil.create('div', 'info legend'),
+				grades = [0, 2, 3, 4, 5],
+				labels = [],
+				from, to;
+labels.push('Star Ratings <br/>');
+			for (var i = 0; i < grades.length; i=i+2) {
+				from = grades[i];
+				to = grades[i + 1];
+				
+				
+				labels.push(
+					'<i style="background:' + getColor(from) + '"></i> ' +
+					from + (to ? '&ndash;' + to : ''));
+			}
+
+			div.innerHTML = labels.join('<br>');
+			return div;
+		};
+
+		legend.addTo(map);
+
+
+L.control.layers(baseMaps).addTo(map);
+//L.control.layers(baseMaps2,baseMaps2).addTo(map);
+</script> 
+</html>

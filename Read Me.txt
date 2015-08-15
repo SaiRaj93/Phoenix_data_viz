@@ -1,0 +1,18 @@
+----------------------------CSE 591: Data Visualization-----------------------------
+-----------------------------------PROJECT READ ME----------------------------------
+
+Cleaning and sentiments requirement:
+Python 3.4
+Java Eclipse
+------------------------------------------------------------------------------------
+
+Note:
+1) Some of the paths are hard coded in the processing and sentiment analysis.
+2) In case you want to run the cde please change the file paths and run the code.
+3) In order to run the visualiztion please open "Visualization.html" in the visualization folder
+
+------------------------------------------------------------------------------------
+
+Link:
+
+http://www.public.asu.edu/~aiyangar/Integrated/Visualisation.html

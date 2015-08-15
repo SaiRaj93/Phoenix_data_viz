@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script type= "text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script>
+var business="[";
+var review="[";
+var user="[";
+var checkin="[";
+var tip="[";
+
+var Monday = [];
+var Tuesday = [];
+var Wednesday = [];
+var Thursday = [];
+var Friday = [];
+var Saturday = [];
+var Sunday = [];
+
+</script>
+<style>
+body {
+ font: 10px sans-serif;
+}
+.axis path,
+.axis line {
+ fill: none;
+ stroke: #000;
+ shape-rendering: crispEdges;
+}
+.dot {
+ stroke: #000;
+}
+</style>
+
+<!--<style>
+body{
+    width:1060px;
+    margin:50px auto;
+}
+path {  stroke: #fff; }
+path:hover {  opacity:0.9; }
+rect:hover {  fill:blue; }
+.axis {  font: 10px sans-serif; }
+.legend tr{    border-bottom:1px solid grey; }
+.legend tr:first-child{    border-top:1px solid grey; }
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {  display: none; }
+.legend{
+    margin-bottom:76px;
+    display:inline-block;
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+.legend td{
+    padding:4px 5px;
+    vertical-align:bottom;
+}
+.legendFreq, .legendPerc{
+    align:right;
+    width:50px;
+}
+
+</style>
+-->
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: orange;
+}
+
+.bar:hover {
+  fill: orangered ;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+</style>
+
+<body>
+<button id="button"> Chutiya </button>
+<!-- <button id="display">  Display </button> -->
+
+<div id='dashboard'>
+</div>
+
+</body>
+
+
+<script>
+
+	var my_json;
+	var json_match;
+	$(document).ready(function(){
+	$.getJSON("checkinProc.json", function(json) {
+	my_json = json;
+    console.log(my_json); // this will show the info it in firebug console
+	});
+	});
+	
+	
+	
+	$("#button").click(function(){    
+	json_match = $.each(my_json, function(obj) {
+		return obj.business_id === "x5Mv61CnZLohZWxfCVCPTQ";
+	});
+	
+	// this is how you grab the data 
+	Monday[0] = json_match[0].checkin_info['0-1'] === undefined ? 0:json_match[0].checkin_info['0-1'];
+	Monday[1] = json_match[0].checkin_info['1-1'] === undefined ? 0:json_match[0].checkin_info['1-1'];
+	Monday[2] = json_match[0].checkin_info['2-1'] === undefined ? 0:json_match[0].checkin_info['2-1'];
+	Monday[3] = json_match[0].checkin_info['3-1'] === undefined ? 0:json_match[0].checkin_info['3-1'];
+	Monday[4] = json_match[0].checkin_info['4-1'] === undefined ? 0:json_match[0].checkin_info['4-1'];
+	Monday[5] = json_match[0].checkin_info['5-1'] === undefined ? 0:json_match[0].checkin_info['5-1'];
+	Monday[6] = json_match[0].checkin_info['6-1'] === undefined ? 0:json_match[0].checkin_info['6-1'];
+	Monday[7] = json_match[0].checkin_info['7-1'] === undefined ? 0:json_match[0].checkin_info['7-1'];
+	Monday[8] = json_match[0].checkin_info['8-1'] === undefined ? 0:json_match[0].checkin_info['8-1'];
+	Monday[9] = json_match[0].checkin_info['9-1'] === undefined ? 0:json_match[0].checkin_info['9-1'];
+	Monday[10] = json_match[0].checkin_info['10-1'] === undefined ? 0:json_match[0].checkin_info['10-1'];
+	Monday[11] = json_match[0].checkin_info['11-1'] === undefined ? 0:json_match[0].checkin_info['11-1'];
+	Monday[12] = json_match[0].checkin_info['12-1'] === undefined ? 0:json_match[0].checkin_info['12-1'];
+	Monday[13] = json_match[0].checkin_info['13-1'] === undefined ? 0:json_match[0].checkin_info['13-1'];
+	Monday[14] = json_match[0].checkin_info['14-1'] === undefined ? 0:json_match[0].checkin_info['14-1'];
+	Monday[15] = json_match[0].checkin_info['15-1'] === undefined ? 0:json_match[0].checkin_info['15-1'];
+	Monday[16] = json_match[0].checkin_info['16-1'] === undefined ? 0:json_match[0].checkin_info['16-1'];
+	Monday[17] = json_match[0].checkin_info['17-1'] === undefined ? 0:json_match[0].checkin_info['17-1'];
+	Monday[18] = json_match[0].checkin_info['18-1'] === undefined ? 0:json_match[0].checkin_info['18-1'];
+	Monday[19] = json_match[0].checkin_info['19-1'] === undefined ? 0:json_match[0].checkin_info['19-1'];
+	Monday[20] = json_match[0].checkin_info['20-1'] === undefined ? 0:json_match[0].checkin_info['20-1'];
+	Monday[21] = json_match[0].checkin_info['21-1'] === undefined ? 0:json_match[0].checkin_info['21-1'];
+	Monday[22] = json_match[0].checkin_info['22-1'] === undefined ? 0:json_match[0].checkin_info['22-1'];
+	Monday[23] = json_match[0].checkin_info['23-1'] === undefined ? 0:json_match[0].checkin_info['23-1'];
+	
+	
+	Tuesday[0] = json_match[0].checkin_info['0-2'] === undefined ? 0:json_match[0].checkin_info['0-2'];
+	Tuesday[1] = json_match[0].checkin_info['1-2'] === undefined ? 0:json_match[0].checkin_info['1-2'];
+	Tuesday[2] = json_match[0].checkin_info['2-2'] === undefined ? 0:json_match[0].checkin_info['2-2'];
+	Tuesday[3] = json_match[0].checkin_info['3-2'] === undefined ? 0:json_match[0].checkin_info['3-2'];
+	Tuesday[4] = json_match[0].checkin_info['4-2'] === undefined ? 0:json_match[0].checkin_info['4-2'];
+	Tuesday[5] = json_match[0].checkin_info['5-2'] === undefined ? 0:json_match[0].checkin_info['5-2'];
+	Tuesday[6] = json_match[0].checkin_info['6-2'] === undefined ? 0:json_match[0].checkin_info['6-2'];
+	Tuesday[7] = json_match[0].checkin_info['7-2'] === undefined ? 0:json_match[0].checkin_info['7-2'];
+	Tuesday[8] = json_match[0].checkin_info['8-2'] === undefined ? 0:json_match[0].checkin_info['8-2'];
+	Tuesday[9] = json_match[0].checkin_info['9-2'] === undefined ? 0:json_match[0].checkin_info['9-2'];
+	Tuesday[10] = json_match[0].checkin_info['10-2'] === undefined ? 0:json_match[0].checkin_info['10-2'];
+	Tuesday[11] = json_match[0].checkin_info['11-2'] === undefined ? 0:json_match[0].checkin_info['11-2'];
+	Tuesday[12] = json_match[0].checkin_info['12-2'] === undefined ? 0:json_match[0].checkin_info['12-2'];
+	Tuesday[13] = json_match[0].checkin_info['13-2'] === undefined ? 0:json_match[0].checkin_info['13-2'];
+	Tuesday[14] = json_match[0].checkin_info['14-2'] === undefined ? 0:json_match[0].checkin_info['14-2'];
+	Tuesday[15] = json_match[0].checkin_info['15-2'] === undefined ? 0:json_match[0].checkin_info['15-2'];
+	Tuesday[16] = json_match[0].checkin_info['16-2'] === undefined ? 0:json_match[0].checkin_info['16-2'];
+	Tuesday[17] = json_match[0].checkin_info['17-2'] === undefined ? 0:json_match[0].checkin_info['17-2'];
+	Tuesday[18] = json_match[0].checkin_info['18-2'] === undefined ? 0:json_match[0].checkin_info['18-2'];
+	Tuesday[19] = json_match[0].checkin_info['19-2'] === undefined ? 0:json_match[0].checkin_info['19-2'];
+	Tuesday[20] = json_match[0].checkin_info['20-2'] === undefined ? 0:json_match[0].checkin_info['20-2'];
+	Tuesday[21] = json_match[0].checkin_info['21-2'] === undefined ? 0:json_match[0].checkin_info['21-2'];
+	Tuesday[22] = json_match[0].checkin_info['22-2'] === undefined ? 0:json_match[0].checkin_info['22-2'];
+	Tuesday[23] = json_match[0].checkin_info['23-2'] === undefined ? 0:json_match[0].checkin_info['23-2'];
+	
+	Wednesday[0] = json_match[0].checkin_info['0-3'] === undefined ? 0:json_match[0].checkin_info['0-3'];
+	Wednesday[1] = json_match[0].checkin_info['1-3'] === undefined ? 0:json_match[0].checkin_info['1-3'];
+	Wednesday[2] = json_match[0].checkin_info['2-3'] === undefined ? 0:json_match[0].checkin_info['2-3'];
+	Wednesday[3] = json_match[0].checkin_info['3-3'] === undefined ? 0:json_match[0].checkin_info['3-3'];
+	Wednesday[4] = json_match[0].checkin_info['4-3'] === undefined ? 0:json_match[0].checkin_info['4-3'];
+	Wednesday[5] = json_match[0].checkin_info['5-3'] === undefined ? 0:json_match[0].checkin_info['5-3'];
+	Wednesday[6] = json_match[0].checkin_info['6-3'] === undefined ? 0:json_match[0].checkin_info['6-3'];
+	Wednesday[7] = json_match[0].checkin_info['7-3'] === undefined ? 0:json_match[0].checkin_info['7-3'];
+	Wednesday[8] = json_match[0].checkin_info['8-3'] === undefined ? 0:json_match[0].checkin_info['8-3'];
+	Wednesday[9] = json_match[0].checkin_info['9-3'] === undefined ? 0:json_match[0].checkin_info['9-3'];
+	Wednesday[10] = json_match[0].checkin_info['10-3'] === undefined ? 0:json_match[0].checkin_info['10-3'];
+	Wednesday[11] = json_match[0].checkin_info['11-3'] === undefined ? 0:json_match[0].checkin_info['11-3'];
+	Wednesday[12] = json_match[0].checkin_info['12-3'] === undefined ? 0:json_match[0].checkin_info['12-3'];
+	Wednesday[13] = json_match[0].checkin_info['13-3'] === undefined ? 0:json_match[0].checkin_info['13-3'];
+	Wednesday[14] = json_match[0].checkin_info['14-3'] === undefined ? 0:json_match[0].checkin_info['14-3'];
+	Wednesday[15] = json_match[0].checkin_info['15-3'] === undefined ? 0:json_match[0].checkin_info['15-3'];
+	Wednesday[16] = json_match[0].checkin_info['16-3'] === undefined ? 0:json_match[0].checkin_info['16-3'];
+	Wednesday[17] = json_match[0].checkin_info['17-3'] === undefined ? 0:json_match[0].checkin_info['17-3'];
+	Wednesday[18] = json_match[0].checkin_info['18-3'] === undefined ? 0:json_match[0].checkin_info['18-3'];
+	Wednesday[19] = json_match[0].checkin_info['19-3'] === undefined ? 0:json_match[0].checkin_info['19-3'];
+	Wednesday[20] = json_match[0].checkin_info['20-3'] === undefined ? 0:json_match[0].checkin_info['20-3'];
+	Wednesday[21] = json_match[0].checkin_info['21-3'] === undefined ? 0:json_match[0].checkin_info['21-3'];
+	Wednesday[22] = json_match[0].checkin_info['22-3'] === undefined ? 0:json_match[0].checkin_info['22-3'];
+	Wednesday[23] = json_match[0].checkin_info['23-3'] === undefined ? 0:json_match[0].checkin_info['23-3'];
+	
+	Thursday[0] = json_match[0].checkin_info['0-4'] === undefined ? 0:json_match[0].checkin_info['0-4'];
+	Thursday[1] = json_match[0].checkin_info['1-4'] === undefined ? 0:json_match[0].checkin_info['1-4'];
+	Thursday[2] = json_match[0].checkin_info['2-4'] === undefined ? 0:json_match[0].checkin_info['2-4'];
+	Thursday[3] = json_match[0].checkin_info['3-4'] === undefined ? 0:json_match[0].checkin_info['3-4'];
+	Thursday[4] = json_match[0].checkin_info['4-4'] === undefined ? 0:json_match[0].checkin_info['4-4'];
+	Thursday[5] = json_match[0].checkin_info['5-4'] === undefined ? 0:json_match[0].checkin_info['5-4'];
+	Thursday[6] = json_match[0].checkin_info['6-4'] === undefined ? 0:json_match[0].checkin_info['6-4'];
+	Thursday[7] = json_match[0].checkin_info['7-4'] === undefined ? 0:json_match[0].checkin_info['7-4'];
+	Thursday[8] = json_match[0].checkin_info['8-4'] === undefined ? 0:json_match[0].checkin_info['8-4'];
+	Thursday[9] = json_match[0].checkin_info['9-4'] === undefined ? 0:json_match[0].checkin_info['9-4'];
+	Thursday[10] = json_match[0].checkin_info['10-4'] === undefined ? 0:json_match[0].checkin_info['10-4'];
+	Thursday[11] = json_match[0].checkin_info['11-4'] === undefined ? 0:json_match[0].checkin_info['11-4'];
+	Thursday[12] = json_match[0].checkin_info['12-4'] === undefined ? 0:json_match[0].checkin_info['12-4'];
+	Thursday[13] = json_match[0].checkin_info['13-4'] === undefined ? 0:json_match[0].checkin_info['13-4'];
+	Thursday[14] = json_match[0].checkin_info['14-4'] === undefined ? 0:json_match[0].checkin_info['14-4'];
+	Thursday[15] = json_match[0].checkin_info['15-4'] === undefined ? 0:json_match[0].checkin_info['15-4'];
+	Thursday[16] = json_match[0].checkin_info['16-4'] === undefined ? 0:json_match[0].checkin_info['16-4'];
+	Thursday[17] = json_match[0].checkin_info['17-4'] === undefined ? 0:json_match[0].checkin_info['17-4'];
+	Thursday[18] = json_match[0].checkin_info['18-4'] === undefined ? 0:json_match[0].checkin_info['18-4'];
+	Thursday[19] = json_match[0].checkin_info['19-4'] === undefined ? 0:json_match[0].checkin_info['19-4'];
+	Thursday[20] = json_match[0].checkin_info['20-4'] === undefined ? 0:json_match[0].checkin_info['20-4'];
+	Thursday[21] = json_match[0].checkin_info['21-4'] === undefined ? 0:json_match[0].checkin_info['21-4'];
+	Thursday[22] = json_match[0].checkin_info['22-4'] === undefined ? 0:json_match[0].checkin_info['22-4'];
+	Thursday[23] = json_match[0].checkin_info['23-4'] === undefined ? 0:json_match[0].checkin_info['23-4'];
+	
+	Friday[0] = json_match[0].checkin_info['0-5'] === undefined ? 0:json_match[0].checkin_info['0-5'];
+	Friday[1] = json_match[0].checkin_info['1-5'] === undefined ? 0:json_match[0].checkin_info['1-5'];
+	Friday[2] = json_match[0].checkin_info['2-5'] === undefined ? 0:json_match[0].checkin_info['2-5'];
+	Friday[3] = json_match[0].checkin_info['3-5'] === undefined ? 0:json_match[0].checkin_info['3-5'];
+	Friday[4] = json_match[0].checkin_info['4-5'] === undefined ? 0:json_match[0].checkin_info['4-5'];
+	Friday[5] = json_match[0].checkin_info['5-5'] === undefined ? 0:json_match[0].checkin_info['5-5'];
+	Friday[6] = json_match[0].checkin_info['6-5'] === undefined ? 0:json_match[0].checkin_info['6-5'];
+	Friday[7] = json_match[0].checkin_info['7-5'] === undefined ? 0:json_match[0].checkin_info['7-5'];
+	Friday[8] = json_match[0].checkin_info['8-5'] === undefined ? 0:json_match[0].checkin_info['8-5'];
+	Friday[9] = json_match[0].checkin_info['9-5'] === undefined ? 0:json_match[0].checkin_info['9-5'];
+	Friday[10] = json_match[0].checkin_info['10-5'] === undefined ? 0:json_match[0].checkin_info['10-5'];
+	Friday[11] = json_match[0].checkin_info['11-5'] === undefined ? 0:json_match[0].checkin_info['11-5'];
+	Friday[12] = json_match[0].checkin_info['12-5'] === undefined ? 0:json_match[0].checkin_info['12-5'];
+	Friday[13] = json_match[0].checkin_info['13-5'] === undefined ? 0:json_match[0].checkin_info['13-5'];
+	Friday[14] = json_match[0].checkin_info['14-5'] === undefined ? 0:json_match[0].checkin_info['14-5'];
+	Friday[15] = json_match[0].checkin_info['15-5'] === undefined ? 0:json_match[0].checkin_info['15-5'];
+	Friday[16] = json_match[0].checkin_info['16-5'] === undefined ? 0:json_match[0].checkin_info['16-5'];
+	Friday[17] = json_match[0].checkin_info['17-5'] === undefined ? 0:json_match[0].checkin_info['17-5'];
+	Friday[18] = json_match[0].checkin_info['18-5'] === undefined ? 0:json_match[0].checkin_info['18-5'];
+	Friday[19] = json_match[0].checkin_info['19-5'] === undefined ? 0:json_match[0].checkin_info['19-5'];
+	Friday[20] = json_match[0].checkin_info['20-5'] === undefined ? 0:json_match[0].checkin_info['20-5'];
+	Friday[21] = json_match[0].checkin_info['21-5'] === undefined ? 0:json_match[0].checkin_info['21-5'];
+	Friday[22] = json_match[0].checkin_info['22-5'] === undefined ? 0:json_match[0].checkin_info['22-5'];
+	Friday[23] = json_match[0].checkin_info['23-5'] === undefined ? 0:json_match[0].checkin_info['23-5'];
+	
+	Saturday[0] = json_match[0].checkin_info['0-6'] === undefined ? 0:json_match[0].checkin_info['0-6'];
+	Saturday[1] = json_match[0].checkin_info['1-6'] === undefined ? 0:json_match[0].checkin_info['1-6'];
+	Saturday[2] = json_match[0].checkin_info['2-6'] === undefined ? 0:json_match[0].checkin_info['2-6'];
+	Saturday[3] = json_match[0].checkin_info['3-6'] === undefined ? 0:json_match[0].checkin_info['3-6'];
+	Saturday[4] = json_match[0].checkin_info['4-6'] === undefined ? 0:json_match[0].checkin_info['4-6'];
+	Saturday[5] = json_match[0].checkin_info['5-6'] === undefined ? 0:json_match[0].checkin_info['5-6'];
+	Saturday[6] = json_match[0].checkin_info['6-6'] === undefined ? 0:json_match[0].checkin_info['6-6'];
+	Saturday[7] = json_match[0].checkin_info['7-6'] === undefined ? 0:json_match[0].checkin_info['7-6'];
+	Saturday[8] = json_match[0].checkin_info['8-6'] === undefined ? 0:json_match[0].checkin_info['8-6'];
+	Saturday[9] = json_match[0].checkin_info['9-6'] === undefined ? 0:json_match[0].checkin_info['9-6'];
+	Saturday[10] = json_match[0].checkin_info['10-6'] === undefined ? 0:json_match[0].checkin_info['10-6'];
+	Saturday[11] = json_match[0].checkin_info['11-6'] === undefined ? 0:json_match[0].checkin_info['11-6'];
+	Saturday[12] = json_match[0].checkin_info['12-6'] === undefined ? 0:json_match[0].checkin_info['12-6'];
+	Saturday[13] = json_match[0].checkin_info['13-6'] === undefined ? 0:json_match[0].checkin_info['13-6'];
+	Saturday[14] = json_match[0].checkin_info['14-6'] === undefined ? 0:json_match[0].checkin_info['14-6'];
+	Saturday[15] = json_match[0].checkin_info['15-6'] === undefined ? 0:json_match[0].checkin_info['15-6'];
+	Saturday[16] = json_match[0].checkin_info['16-6'] === undefined ? 0:json_match[0].checkin_info['16-6'];
+	Saturday[17] = json_match[0].checkin_info['17-6'] === undefined ? 0:json_match[0].checkin_info['17-6'];
+	Saturday[18] = json_match[0].checkin_info['18-6'] === undefined ? 0:json_match[0].checkin_info['18-6'];
+	Saturday[19] = json_match[0].checkin_info['19-6'] === undefined ? 0:json_match[0].checkin_info['19-6'];
+	Saturday[20] = json_match[0].checkin_info['20-6'] === undefined ? 0:json_match[0].checkin_info['20-6'];
+	Saturday[21] = json_match[0].checkin_info['21-6'] === undefined ? 0:json_match[0].checkin_info['21-6'];
+	Saturday[22] = json_match[0].checkin_info['22-6'] === undefined ? 0:json_match[0].checkin_info['22-6'];
+	Saturday[23] = json_match[0].checkin_info['23-6'] === undefined ? 0:json_match[0].checkin_info['23-6'];
+
+	
+    Sunday[0] = json_match[0].checkin_info['0-0'] === undefined ? 0:json_match[0].checkin_info['0-0'];
+	Sunday[1] = json_match[0].checkin_info['1-0'] === undefined ? 0:json_match[0].checkin_info['1-0'];
+	Sunday[2] = json_match[0].checkin_info['2-0'] === undefined ? 0:json_match[0].checkin_info['2-0'];
+	Sunday[3] = json_match[0].checkin_info['3-0'] === undefined ? 0:json_match[0].checkin_info['3-0'];
+	Sunday[4] = json_match[0].checkin_info['4-0'] === undefined ? 0:json_match[0].checkin_info['4-0'];
+	Sunday[5] = json_match[0].checkin_info['5-0'] === undefined ? 0:json_match[0].checkin_info['5-0'];
+	Sunday[6] = json_match[0].checkin_info['6-0'] === undefined ? 0:json_match[0].checkin_info['6-0'];
+	Sunday[7] = json_match[0].checkin_info['7-0'] === undefined ? 0:json_match[0].checkin_info['7-0'];
+	Sunday[8] = json_match[0].checkin_info['8-0'] === undefined ? 0:json_match[0].checkin_info['8-0'];
+	Sunday[9] = json_match[0].checkin_info['9-0'] === undefined ? 0:json_match[0].checkin_info['9-0'];
+	Sunday[10] = json_match[0].checkin_info['10-0'] === undefined ? 0:json_match[0].checkin_info['10-0'];
+	Sunday[11] = json_match[0].checkin_info['11-0'] === undefined ? 0:json_match[0].checkin_info['11-0'];
+	Sunday[12] = json_match[0].checkin_info['12-0'] === undefined ? 0:json_match[0].checkin_info['12-0'];
+	Sunday[13] = json_match[0].checkin_info['13-0'] === undefined ? 0:json_match[0].checkin_info['13-0'];
+	Sunday[14] = json_match[0].checkin_info['14-0'] === undefined ? 0:json_match[0].checkin_info['14-0'];
+	Sunday[15] = json_match[0].checkin_info['15-0'] === undefined ? 0:json_match[0].checkin_info['15-0'];
+	Sunday[16] = json_match[0].checkin_info['16-0'] === undefined ? 0:json_match[0].checkin_info['16-0'];
+	Sunday[17] = json_match[0].checkin_info['17-0'] === undefined ? 0:json_match[0].checkin_info['17-0'];
+	Sunday[18] = json_match[0].checkin_info['18-0'] === undefined ? 0:json_match[0].checkin_info['18-0'];
+	Sunday[19] = json_match[0].checkin_info['19-0'] === undefined ? 0:json_match[0].checkin_info['19-0'];
+	Sunday[20] = json_match[0].checkin_info['20-0'] === undefined ? 0:json_match[0].checkin_info['20-0'];
+	Sunday[21] = json_match[0].checkin_info['21-0'] === undefined ? 0:json_match[0].checkin_info['21-0'];
+	Sunday[22] = json_match[0].checkin_info['22-0'] === undefined ? 0:json_match[0].checkin_info['22-0'];
+	Sunday[23] = json_match[0].checkin_info['23-0'] === undefined ? 0:json_match[0].checkin_info['23-0'];
+	
+	abc();
+	});
+ 
+</script>
+
+
+<script>
+
+function dashboard(id, fData){
+    var barColor = 'steelblue';
+    function segColor(c){ return {Monday:"#807dba", Tuesday:"#e08214",Wednesday:"#41ab5d",Thursday:"#41afad",Friday:"#3e3e5d",Saturday:"#112233",Sunday:"#41ab5d"}[c]; }
+    
+    // compute total for each state.
+    fData.forEach(function(d){d.total=0;/*d.freq.Monday+d.freq.Tuesday+d.freq.Wednesday+d.freq.Thursday+d.freq.Friday+d.freq.Saturday+d.freq.Sunday;*/});
+    
+    // function to handle histogram.
+    function histoGram(fD){
+        var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};
+        hGDim.w = 330 - hGDim.l - hGDim.r, 
+        hGDim.h = 300 - hGDim.t - hGDim.b;
+            
+        //create svg for histogram.
+        var hGsvg = d3.select(id).append("svg")
+            .attr("width", hGDim.w + hGDim.l + hGDim.r)
+            .attr("height", hGDim.h + hGDim.t + hGDim.b).append("g")
+            .attr("transform", "translate(" + hGDim.l + "," + hGDim.t + ")");
+
+        // create function for x-axis mapping.
+        var x = d3.scale.ordinal().rangeRoundBands([0, hGDim.w], 0.1)
+                .domain(fD.map(function(d) { return d[0]; }));
+
+        // Add x-axis to the histogram svg.
+        hGsvg.append("g").attr("class", "x axis")
+            .attr("transform", "translate(0," + hGDim.h + ")")
+            .call(d3.svg.axis().scale(x).orient("bottom"));
+
+        // Create function for y-axis map.
+        var y = d3.scale.linear().range([hGDim.h, 0])
+                .domain([0, d3.max(fD, function(d) { return d[1]; })]);
+
+        // Create bars for histogram to contain rectangles and freq labels.
+        var bars = hGsvg.selectAll(".bar").data(fD).enter()
+                .append("g").attr("class", "bar");
+        
+        //create the rectangles.
+        bars.append("rect")
+            .attr("x", function(d) { return x(d[0]); })
+            .attr("y", function(d) { return y(d[1]); })
+            .attr("width", x.rangeBand())
+            .attr("height", function(d) { return hGDim.h - y(d[1]); })
+            .attr('fill',barColor);
+            /*.on("mouseover",mouseover)// mouseover is defined below.
+            .on("mouseout",mouseout);// mouseout is defined below.
+            */
+        //Create the frequency labels above the rectangles.
+        bars.append("text").text(function(d){ return d3.format(",")(d[1])})
+            .attr("x", function(d) { return x(d[0])+x.rangeBand()/2; })
+            .attr("y", function(d) { return y(d[1])-5; })
+            .attr("text-anchor", "middle");
+        
+        function mouseover(d){  // utility function to be called on mouseover.
+            // filter for selected state.
+            var st = fData.filter(function(s){ return s.State == d[0];})[0],
+                nD = d3.keys(st.freq).map(function(s){ return {type:s, freq:st.freq[s]};});
+               
+            // call update functions of pie-chart and legend.    
+            pC.update(nD);
+            leg.update(nD);
+        }
+        
+        function mouseout(d){    // utility function to be called on mouseout.
+            // reset the pie-chart and legend.    
+            pC.update(tF);
+            leg.update(tF);
+        }
+        
+        // create function to update the bars. This will be used by pie-chart.
+        hG.update = function(nD, color){
+            // update the domain of the y-axis map to reflect change in frequencies.
+            y.domain([0, d3.max(nD, function(d) { return d[1]; })]);
+            
+            // Attach the new data to the bars.
+            var bars = hGsvg.selectAll(".bar").data(nD);
+            
+            // transition the height and color of rectangles.
+            bars.select("rect").transition().duration(500)
+                .attr("y", function(d) {return y(d[1]); })
+                .attr("height", function(d) { return hGDim.h - y(d[1]); })
+                .attr("fill", color);
+
+            // transition the frequency labels location and change value.
+            bars.select("text").transition().duration(500)
+                .text(function(d){ return d3.format(",")(d[1])})
+                .attr("y", function(d) {return y(d[1])-5; });            
+        }        
+        return hG;
+    }
+    
+    // function to handle pieChart.
+    function pieChart(pD){
+        var pC ={},    pieDim ={w:250, h: 250};
+        pieDim.r = Math.min(pieDim.w, pieDim.h) / 2;
+                
+        // create svg for pie chart.
+        var piesvg = d3.select(id).append("svg")
+            .attr("width", pieDim.w).attr("height", pieDim.h).append("g")
+            .attr("transform", "translate("+pieDim.w/2+","+pieDim.h/2+")");
+        
+        // create function to draw the arcs of the pie slices.
+        var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
+
+        // create a function to compute the pie slice angles.
+        var pie = d3.layout.pie().sort(null).value(function(d) { return d.freq; });
+
+        // Draw the pie slices.
+        piesvg.selectAll("path").data(pie(pD)).enter().append("path").attr("d", arc)
+            .each(function(d) { this._current = d; })
+            .style("fill", function(d) { return segColor(d.data.type); })
+            .on("mouseover",mouseover);
+			//.on("mouseout",mouseout);
+
+        // create function to update pie-chart. This will be used by histogram.
+        pC.update = function(nD){
+            piesvg.selectAll("path").data(pie(nD)).transition().duration(500)
+                .attrTween("d", arcTween);
+        }        
+        
+		// Utility function to be called on mouseover a pie slice.
+        function mouseover(d){
+            // call the update function of histogram with new data.
+            hG.update(fData.map(function(v){ 
+                return [v.State,v.freq[d.data.type]];}),segColor(d.data.type));
+        }
+		
+        //Utility function to be called on mouseout a pie slice.
+        function mouseout(d){
+            // call the update function of histogram with all data.
+            hG.update(fData.map(function(v){
+                return [v.State,v.total];}), barColor);
+        }
+        // Animating the pie-slice requiring a custom function which specifies
+        // how the intermediate paths should be drawn.
+        function arcTween(a) {
+            var i = d3.interpolate(this._current, a);
+            this._current = i(0);
+            return function(t) { return arc(i(t));    };
+        }    
+        return pC;
+    }
+    
+    // function to handle legend.
+    function legend(lD){
+        var leg = {};
+            
+        // create table for legend.
+        var legend = d3.select(id).append("table").attr('class','legend');
+        
+        // create one row per segment.
+        var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
+            
+        // create the first column for each segment.
+        tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect")
+            .attr("width", '16').attr("height", '16')
+			.attr("fill",function(d){ return segColor(d.type); });
+            
+        // create the second column for each segment.
+        tr.append("td").text(function(d){ return d.type;});
+
+        // create the third column for each segment.
+        tr.append("td").attr("class",'legendFreq')
+            .text(function(d){ return d3.format(",")(d.freq);});
+
+        // create the fourth column for each segment.
+        tr.append("td").attr("class",'legendPerc')
+            .text(function(d){ return getLegend(d,lD);});
+
+        // Utility function to be used to update the legend.
+        leg.update = function(nD){
+            // update the data attached to the row elements.
+            var l = legend.select("tbody").selectAll("tr").data(nD);
+
+            // update the frequencies.
+            l.select(".legendFreq").text(function(d){ return d3.format(",")(d.freq);});
+
+            // update the percentage column.
+            l.select(".legendPerc").text(function(d){ return getLegend(d,nD);});        
+        }
+        
+        function getLegend(d,aD){ // Utility function to compute percentage.
+            return d3.format("%")(d.freq/d3.sum(aD.map(function(v){ return v.freq; })));
+        }
+
+        return leg;
+    }
+    
+    // calculate total frequency by segment for all state.
+    var tF = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].map(function(d){ 
+        return {type:d, freq: d3.sum(fData.map(function(t){ return t.freq[d];}))}; 
+    });    
+    
+    // calculate total frequency by state for all segment.
+    var sF = fData.map(function(d){return [d.State,d.total];});
+
+    var hG = histoGram(sF), // create the histogram.
+        pC = pieChart(tF), // create the pie-chart.
+        leg= legend(tF);  // create the legend.
+}
+</script>
+
+<script>
+/*
+var data =
+[{"letter":"A", "frequency":"1"},
+{"letter":"B", "frequency":"2"},
+{"letter":"C", "frequency":"3"},
+{"letter":"D", "frequency":"4"},
+{"letter":"E", "frequency":"5"},
+{"letter":"F", "frequency":"6"},
+];
+var margin = {top: 40, right: 20, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var formatPercent = d3.format(".0%");
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+    //.tickFormat(formatPercent);
+
+var tip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+    return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
+  })
+
+	var svg = d3.select("body").append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+	  .append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	svg.call(tip);
+
+  console.log(data);
+  x.domain(data.map(function(d) { return d["letter"]; }));
+  y.domain([0, d3.max(data, function(d) { return d["frequency"]; })]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Count");
+
+  svg.selectAll(".bar")
+      .data(data)
+	.enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.letter); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.frequency); })
+      .attr("height", function(d) { return height - y(d.frequency); })
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide)
+
+//});
+
+function type(d) {
+  d.frequency = +d.frequency;
+  return d;
+}
+*/
+
+</script>
+
+<script>
+//$("#display").click(function(){
+function abc(){
+var freqData=[
+{State:'0',freq:{Monday:Monday[0], Tuesday:Tuesday[0], Wednesday:Wednesday[0], Thursday:Thursday[0], Friday:Friday[0], Saturday:Saturday[0], Sunday:Sunday[0]}}
+,{State:'1',freq:{Monday:Monday[1], Tuesday:Tuesday[1], Wednesday:Wednesday[1], Thursday:Thursday[1], Friday:Friday[1], Saturday:Saturday[1], Sunday:Sunday[1]}}
+,{State:'2',freq:{Monday:Monday[2], Tuesday:Tuesday[2], Wednesday:Wednesday[2], Thursday:Thursday[2], Friday:Friday[2], Saturday:Saturday[2], Sunday:Sunday[2]}}
+,{State:'3',freq:{Monday:Monday[3], Tuesday:Tuesday[3], Wednesday:Wednesday[3], Thursday:Thursday[3], Friday:Friday[3], Saturday:Saturday[3], Sunday:Sunday[3]}}
+,{State:'4',freq:{Monday:Monday[4], Tuesday:Tuesday[4], Wednesday:Wednesday[4], Thursday:Thursday[4], Friday:Friday[4], Saturday:Saturday[4], Sunday:Sunday[4]}}
+,{State:'5',freq:{Monday:Monday[5], Tuesday:Tuesday[5], Wednesday:Wednesday[5], Thursday:Thursday[5], Friday:Friday[5], Saturday:Saturday[5], Sunday:Sunday[5]}}
+,{State:'6',freq:{Monday:Monday[6], Tuesday:Tuesday[6], Wednesday:Wednesday[6], Thursday:Thursday[6], Friday:Friday[6], Saturday:Saturday[6], Sunday:Sunday[6]}}
+,{State:'7',freq:{Monday:Monday[7], Tuesday:Tuesday[7], Wednesday:Wednesday[7], Thursday:Thursday[7], Friday:Friday[7], Saturday:Saturday[7], Sunday:Sunday[7]}}
+,{State:'8',freq:{Monday:Monday[8], Tuesday:Tuesday[8], Wednesday:Wednesday[8], Thursday:Thursday[8], Friday:Friday[8], Saturday:Saturday[8], Sunday:Sunday[8]}}
+,{State:'9',freq:{Monday:Monday[9], Tuesday:Tuesday[9], Wednesday:Wednesday[9], Thursday:Thursday[9], Friday:Friday[9], Saturday:Saturday[9], Sunday:Sunday[9]}}
+,{State:'10',freq:{Monday:Monday[10], Tuesday:Tuesday[10], Wednesday:Wednesday[10], Thursday:Thursday[10], Friday:Friday[10], Saturday:Saturday[10], Sunday:Sunday[10]}}
+,{State:'11',freq:{Monday:Monday[11], Tuesday:Tuesday[11], Wednesday:Wednesday[11], Thursday:Thursday[11], Friday:Friday[11], Saturday:Saturday[11], Sunday:Sunday[11]}}
+,{State:'12',freq:{Monday:Monday[12], Tuesday:Tuesday[12], Wednesday:Wednesday[12], Thursday:Thursday[12], Friday:Friday[12], Saturday:Saturday[12], Sunday:Sunday[12]}}
+,{State:'13',freq:{Monday:Monday[13], Tuesday:Tuesday[13], Wednesday:Wednesday[13], Thursday:Thursday[13], Friday:Friday[13], Saturday:Saturday[13], Sunday:Sunday[13]}}
+,{State:'14',freq:{Monday:Monday[14], Tuesday:Tuesday[14], Wednesday:Wednesday[14], Thursday:Thursday[14], Friday:Friday[14], Saturday:Saturday[14], Sunday:Sunday[14]}}
+,{State:'15',freq:{Monday:Monday[15], Tuesday:Tuesday[15], Wednesday:Wednesday[15], Thursday:Thursday[15], Friday:Friday[15], Saturday:Saturday[15], Sunday:Sunday[15]}}
+,{State:'16',freq:{Monday:Monday[16], Tuesday:Tuesday[16], Wednesday:Wednesday[16], Thursday:Thursday[16], Friday:Friday[16], Saturday:Saturday[16], Sunday:Sunday[16]}}
+,{State:'17',freq:{Monday:Monday[17], Tuesday:Tuesday[17], Wednesday:Wednesday[17], Thursday:Thursday[17], Friday:Friday[17], Saturday:Saturday[17], Sunday:Sunday[17]}}
+,{State:'18',freq:{Monday:Monday[18], Tuesday:Tuesday[18], Wednesday:Wednesday[18], Thursday:Thursday[18], Friday:Friday[18], Saturday:Saturday[18], Sunday:Sunday[18]}}
+,{State:'19',freq:{Monday:Monday[19], Tuesday:Tuesday[19], Wednesday:Wednesday[19], Thursday:Thursday[19], Friday:Friday[19], Saturday:Saturday[19], Sunday:Sunday[19]}}
+,{State:'20',freq:{Monday:Monday[20], Tuesday:Tuesday[20], Wednesday:Wednesday[20], Thursday:Thursday[20], Friday:Friday[20], Saturday:Saturday[20], Sunday:Sunday[20]}}
+,{State:'21',freq:{Monday:Monday[21], Tuesday:Tuesday[21], Wednesday:Wednesday[21], Thursday:Thursday[21], Friday:Friday[21], Saturday:Saturday[21], Sunday:Sunday[21]}}
+,{State:'22',freq:{Monday:Monday[22], Tuesday:Tuesday[22], Wednesday:Wednesday[22], Thursday:Thursday[22], Friday:Friday[22], Saturday:Saturday[22], Sunday:Sunday[22]}}
+,{State:'23',freq:{Monday:Monday[23], Tuesday:Tuesday[23], Wednesday:Wednesday[23], Thursday:Thursday[23], Friday:Friday[23], Saturday:Saturday[23], Sunday:Sunday[23]}}
+];
+
+dashboard('#dashboard',freqData);
+//displaychart();
+	}
+</script> 
+
